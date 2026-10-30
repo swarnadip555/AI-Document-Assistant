@@ -4,14 +4,19 @@ Extracts relevant context chunks from the FAISS vector database
 using similarity search or MMR, preserving citations and scores.
 """
 
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 from langchain_core.documents import Document
-from langchain_community.vectorstores import FAISS
+
+try:
+    from langchain_community.vectorstores import FAISS
+except Exception:
+    FAISS = Any
+
 import config
 
 
 def retrieve_relevant_chunks(
-    vectorstore: FAISS,
+    vectorstore: Any,
     query: str,
     top_k: int = config.TOP_K_RETRIEVAL,
     search_type: str = "similarity"

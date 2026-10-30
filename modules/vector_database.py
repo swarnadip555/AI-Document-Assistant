@@ -7,13 +7,20 @@ loading, and querying with metadata.
 import os
 import shutil
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Any
 from langchain_core.documents import Document
-from langchain_community.vectorstores import FAISS
+
+try:
+    from langchain_community.vectorstores import FAISS
+    _faiss_import_error = None
+except Exception as e:
+    FAISS = None
+    _faiss_import_error = str(e)
+
 import config
 
 
-def create_vectorstore(documents: List[Document], embeddings) -> FAISS:
+def create_vectorstore(documents: List[Document], embeddings) -> Any:
     """
     Create a new FAISS vector store in memory from document chunks.
     
@@ -24,6 +31,9 @@ def create_vectorstore(documents: List[Document], embeddings) -> FAISS:
     Returns:
         FAISS vectorstore.
     """
+    if FAISS is None:
+        raise ImportError(f"FAISS vector store failed to load: {_faiss_import_error}. Please ensure packages.txt has libgomp1.")
+
     if not documents:
         raise ValueError("Cannot build vectorstore: No documents provided.")
     
@@ -31,7 +41,7 @@ def create_vectorstore(documents: List[Document], embeddings) -> FAISS:
     return vectorstore
 
 
-def save_vectorstore(vectorstore: FAISS, folder_path: str = str(config.VECTORSTORE_DIR), index_name: str = "index") -> str:
+def save_vectorstore(vectorstore: Any, folder_path: str = str(config.VECTORSTORE_DIR), index_name: str = "index") -> str:
     """
     Persist FAISS index and docstore to disk.
     
@@ -43,13 +53,15 @@ def save_vectorstore(vectorstore: FAISS, folder_path: str = str(config.VECTORSTO
     Returns:
         Folder path where vectorstore was saved.
     """
+    if vectorstore is None:
+        return ""
     path = Path(folder_path)
     path.mkdir(parents=True, exist_ok=True)
     vectorstore.save_local(folder_path=str(path), index_name=index_name)
     return str(path)
 
 
-def load_vectorstore(folder_path: str = str(config.VECTORSTORE_DIR), embeddings=None, index_name: str = "index") -> Optional[FAISS]:
+def load_vectorstore(folder_path: str = str(config.VECTORSTORE_DIR), embeddings=None, index_name: str = "index") -> Optional[Any]:
     """
     Load an existing FAISS vector store from disk.
     
@@ -61,6 +73,9 @@ def load_vectorstore(folder_path: str = str(config.VECTORSTORE_DIR), embeddings=
     Returns:
         FAISS vectorstore or None if not found or corrupted.
     """
+    if FAISS is None:
+        return None
+
     path = Path(folder_path)
     index_file = path / f"{index_name}.faiss"
     pkl_file = path / f"{index_name}.pkl"

@@ -8,20 +8,22 @@ import os
 from typing import Optional, List
 import config
 
+try:
+    import streamlit as st
+    cache_decorator = st.cache_resource
+except Exception:
+    def cache_decorator(func):
+        return func
+
 _cached_embedding_instance = None
 
 
+@cache_decorator
 def get_embedding_model(model_name: str = config.EMBEDDING_MODEL_NAME):
     """
     Get or initialize the embedding model.
     Uses langchain_huggingface or langchain_community HuggingFaceEmbeddings,
     with automatic device detection (cuda / cpu).
-    
-    Args:
-        model_name: HuggingFace model repo ID.
-        
-    Returns:
-        Embeddings model instance compatible with LangChain FAISS.
     """
     global _cached_embedding_instance
     if _cached_embedding_instance is not None:
