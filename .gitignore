@@ -37,3 +37,4 @@ vectorstore/*.pkl
 # Uploaded PDFs (generated or user-uploaded)
 data/uploaded_pdfs/*.pdf
 !data/uploaded_pdfs/.gitkeep
+
