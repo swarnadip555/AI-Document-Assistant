@@ -1,9 +1,7 @@
 [server]
-port = 8501
+headless = true
 enableCORS = false
 enableXsrfProtection = false
-headless = false
-runOnSave = true
 
 [browser]
 gatherUsageStats = false
@@ -14,4 +12,3 @@ primaryColor = "#38bdf8"
 backgroundColor = "#080c14"
 secondaryBackgroundColor = "#0f172a"
 textColor = "#f8fafc"
-
