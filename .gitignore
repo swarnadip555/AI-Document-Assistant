@@ -1,0 +1,39 @@
+# Python Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment Variables & API Keys
+.env
+.env.*
+!.env.example
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Vector store cache files (generated dynamically on runtime)
+vectorstore/*.faiss
+vectorstore/*.pkl
+!vectorstore/.gitkeep
+
+# Uploaded PDFs (generated or user-uploaded)
+data/uploaded_pdfs/*.pdf
+!data/uploaded_pdfs/.gitkeep
